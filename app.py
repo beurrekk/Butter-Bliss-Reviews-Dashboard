@@ -27,6 +27,7 @@ df['Review Group'] = df['Review Site'].apply(categorize_site)
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 df['Month'] = pd.Categorical(df['Month'], categories=month_order, ordered=True)
 
+
 # Header
 st.title("Review Hotel Dashboard")
 
