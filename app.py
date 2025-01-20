@@ -24,6 +24,8 @@ df['Review'] = df['Review'].fillna('').apply(translate_to_english)
 df['Review Date'] = pd.to_datetime(df['Review Date'], errors='coerce')
 df['Quarter'] = df['Review Date'].dt.to_period('Q')
 
+df
+
 # Header
 st.title("Review Hotel Dashboard")
 
