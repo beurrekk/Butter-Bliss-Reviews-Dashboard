@@ -15,6 +15,7 @@ df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 # Preprocess data
 df['Revinate Collected Date'] = pd.to_datetime(df['Revinate Collected Date'], errors='coerce')
 df['Review Date'] = pd.to_datetime(df['Review Date'], errors='coerce')
+df['Quarter'] = df['Review Date'].dt.to_period('Q')
 df['Month'] = df['Review Date'].dt.strftime('%B')
 
 # Categorize Review Site
@@ -26,7 +27,6 @@ df['Review Group'] = df['Review Site'].apply(categorize_site)
 # Order months
 month_order = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 df['Month'] = pd.Categorical(df['Month'], categories=month_order, ordered=True)
-
 
 # Header
 st.title("Review Hotel Dashboard")
@@ -53,51 +53,49 @@ st.plotly_chart(fig1)
 hotel_options = ['All'] + df['Hotel'].unique().tolist()
 selected_hotel = st.selectbox("Filter by Hotel (Chart 2 and Chart 3):", hotel_options, index=0)
 
-# Chart 2: Line chart for average rating by month
+# Chart 2: Line chart for average rating by quarter
 if selected_hotel == "All":
     filtered_data = df
 else:
     filtered_data = df[df['Hotel'] == selected_hotel]
 
-monthly_avg = filtered_data.groupby(['Month', 'Review Group'])['Rating'].mean().reset_index()
-monthly_avg_all = filtered_data.groupby('Month')['Rating'].mean().reset_index()
-monthly_avg_all['Review Group'] = 'All'
-monthly_avg = pd.concat([monthly_avg, monthly_avg_all])
+quarterly_avg = filtered_data.groupby(['Quarter', 'Review Group'])['Rating'].mean().reset_index()
+quarterly_avg_all = filtered_data.groupby('Quarter')['Rating'].mean().reset_index()
+quarterly_avg_all['Review Group'] = 'All'
+quarterly_avg = pd.concat([quarterly_avg, quarterly_avg_all])
 
 fig2 = px.line(
-    monthly_avg,
-    x='Month',
+    quarterly_avg,
+    x='Quarter',
     y='Rating',
     color='Review Group',
-    title='Average Rating by Month',
-    labels={'Rating': 'Average Rating', 'Month': 'Month'},
+    title='Average Rating by Quarter',
+    labels={'Rating': 'Average Rating', 'Quarter': 'Quarter'},
     color_discrete_sequence=colors
 )
 fig2.update_traces(mode='lines+markers')
-fig2.update_xaxes(categoryorder='array', categoryarray=month_order)
 
-# Chart 3: Line chart for count of reviews by month
+# Chart 3: Line chart for count of reviews by quarter
 if selected_hotel == "All":
     filtered_chart3 = df
 else:
     filtered_chart3 = df[df['Hotel'] == selected_hotel]
 
-monthly_count = filtered_chart3.groupby(['Month', 'Review Group']).size().reset_index(name='Count')
-monthly_count_all = filtered_chart3.groupby('Month').size().reset_index(name='Count')
-monthly_count_all['Review Group'] = 'All'
-monthly_count = pd.concat([monthly_count, monthly_count_all])
+quarterly_count = filtered_chart3.groupby(['Quarter', 'Review Group']).size().reset_index(name='Count')
+quarterly_count_all = filtered_chart3.groupby('Quarter').size().reset_index(name='Count')
+quarterly_count_all['Review Group'] = 'All'
+quarterly_count = pd.concat([quarterly_count, quarterly_count_all])
 
 fig3 = px.line(
-    monthly_count,
-    x='Month',
+    quarterly_count,
+    x='Quarter',
     y='Count',
     color='Review Group',
-    title='Count of Reviews by Month',
-    labels={'Count': 'Number of Reviews', 'Month': 'Month'},
+    title='Count of Reviews by Quarter',
+    labels={'Count': 'Number of Reviews', 'Quarter': 'Quarter'},
     color_discrete_sequence=colors
 )
 fig3.update_traces(mode='lines+markers')
-fig3.update_xaxes(categoryorder='array', categoryarray=month_order)
 
 # Display Chart 2 and Chart 3 in two columns
 col1, col2 = st.columns(2)
