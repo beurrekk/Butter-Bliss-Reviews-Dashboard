@@ -10,7 +10,8 @@ colors = ['#F2DD83', '#9A8CB5','#CBD9EF', '#FCD5C6',  '#EB9861', '#72884B', '#56
 
 # Load data
 uploaded_file = "review_new_new.csv"
-df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
+df = pd.read_csv('review_2024.csv',skiprows = 9,encoding='utf-16', delimiter='\t')
+
 
 
 # Preprocess data
