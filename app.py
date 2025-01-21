@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-
 # Set Streamlit wide mode
 st.set_page_config(layout="wide")
 
@@ -12,7 +11,6 @@ colors = ['#F2DD83', '#9A8CB5','#CBD9EF', '#FCD5C6',  '#EB9861', '#72884B', '#56
 # Load data
 uploaded_file = "review_new.csv"
 df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
-
 
 # Preprocess data
 df['Revinate Collected Date'] = pd.to_datetime(df['Revinate Collected Date'], errors='coerce')
