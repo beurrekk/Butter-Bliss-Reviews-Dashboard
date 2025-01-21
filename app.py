@@ -11,7 +11,6 @@ st.set_page_config(layout="wide")
 uploaded_file = "review_new_new.csv"
 df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 
-
 # Preprocess data
 df['Review Date'] = pd.to_datetime(df['Review Date'], format="%d/%m/%Y")
 df['Month'] = df['Review Date'].dt.strftime('%B')
@@ -62,6 +61,10 @@ with chart4_chart5_col1:
     st.markdown("### Monthly Review Comparison (Google vs OTA)")
     monthly_ota_google = filtered_data.groupby(['Month', 'Review Group'])['Review ID'].count().reset_index()
     ota_google_pivot = monthly_ota_google.pivot(index='Month', columns='Review Group', values='Review ID').fillna(0).reset_index()
+    month_order = [
+        "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+    ]
+    ota_google_pivot['Month'] = pd.Categorical(ota_google_pivot['Month'], categories=month_order, ordered=True)
     ota_google_pivot.sort_values(by='Month', inplace=True)
     fig4 = px.scatter(ota_google_pivot, x='OTA', y='Google', text='Month',
                       title="Scatter Chart: OTA vs Google Reviews by Month",
@@ -77,6 +80,8 @@ with chart4_chart5_col2:
     diverging_data['Direction'] = diverging_data['Review Group'].map({
         'Google': 'Left', 'OTA': 'Right'
     })
+    diverging_data['Month'] = pd.Categorical(diverging_data['Month'], categories=month_order, ordered=True)
+    diverging_data.sort_values(by='Month', inplace=True)
     fig5 = px.bar(diverging_data, x='Count', y='Month', color='Review Group', orientation='h',
                   title="Diverging Bar Chart: OTA and Google Reviews by Month",
                   labels={'Count': 'Review Count'}, color_discrete_sequence=colors)
