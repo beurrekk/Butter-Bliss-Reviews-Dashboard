@@ -97,14 +97,12 @@ fig3 = px.line(
 )
 fig3.update_traces(mode='lines+markers')
 
-
 # Display Chart 2 and Chart 3 in two columns
 col1, col2 = st.columns(2)
 with col1:
     st.plotly_chart(fig2)
 with col2:
     st.plotly_chart(fig3)
-
 
 # Filter for Chart 4 and Chart 5
 hotel_options_chart45 = ['All'] + df['Hotel'].unique().tolist()
