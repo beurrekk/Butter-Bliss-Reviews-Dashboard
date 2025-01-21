@@ -11,7 +11,6 @@ st.set_page_config(layout="wide")
 uploaded_file = "review_new_new.csv"
 df = pd.read_csv(uploaded_file, encoding='ISO-8859-1')
 
-
 # Preprocess data
 df['Review Date'] = pd.to_datetime(df['Review Date'], format="%d/%m/%Y")
 df['Month'] = df['Review Date'].dt.strftime('%B')
