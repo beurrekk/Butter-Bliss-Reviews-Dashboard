@@ -146,6 +146,8 @@ diverging_fig = px.bar(
     orientation='h',
     color_discrete_sequence=['#9A8CB5', '#F2DD83']
 )
+diverging_fig.add_vline(x=-1000, line_dash="dash", line_color="black")
+diverging_fig.add_vline(x=1000, line_dash="dash", line_color="black")
 
 # Display Chart 4 and Chart 5 in two columns
 col3, col4 = st.columns(2)
